@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {catchError} from 'rxjs/operators';
 
@@ -18,7 +18,10 @@ export class InterceptorService implements HttpInterceptor {
       url: environment.API_URL + req.url
     });
     return next.handle(newReq).pipe(
-      catchError(err => console.log('Status code: ' + err.status))
+      catchError(err => {
+        console.log('Status code: ' + err.status);
+        return throwError(err);
+      })
     );
   }
 }
